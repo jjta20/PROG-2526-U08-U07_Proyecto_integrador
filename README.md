@@ -1,44 +1,49 @@
-# ⚔️ Proyecto Integrador: Motor de Combate RPG
+# ⚔️ Proyecto integrador: motor de combate RPG
 
-¡Bienvenidos al **Jefe Final** de la Programación Orientada a Objetos! 👾
+¡Hola de nuevo, estudiantes! 👋 
 
-Una empresa de desarrollo de videojuegos *indie* nos ha pasado un Documento de Diseño (GDD) con las reglas de su nuevo juego de rol. Nuestra misión ha sido traducir esas reglas a código Java puro, uniendo los dos grandes pilares que hemos estudiado: **La Herencia (Unidad 7)** y **Las Interfaces (Unidad 8)**. 
+Bienvenidos al **jefe final** de la programación orientada a objetos. 
 
-En este repositorio encontraréis el motor del juego totalmente funcional y estructurado en paquetes profesionales.
+En este repositorio encontraréis la solución al proyecto integrador donde por fin unimos los dos grandes pilares que hemos estudiado: **la herencia (unidad 7)** y **las interfaces (unidad 8)**. 
 
----
-
-## 🏗️ Arquitectura del Motor (Paquetes)
-
-Para que un juego sea escalable, no podemos tener todos los archivos mezclados. Fijaos en cómo hemos estructurado el proyecto en **4 paquetes** distintos:
-
-### 📦 1. `entidades` (La Base)
-*   🧍 **`Personaje.java`**: La madre de todas las clases. Es **abstracta** porque en el juego no existen "personajes genéricos", todos tienen una profesión. 
-    *   Usa visibilidad `protected` para que las profesiones hereden la vida y el nivel sin romper la encapsulación frente a ataques externos.
-    *   Obliga a sus hijos a implementar el método `gritoBatalla()`.
-
-### 📦 2. `habilidades` (Los Contratos)
-*   🗡️ **`Atacante.java`**: Interfaz que obliga a programar el método `atacar()`.
-*   🩹 **`Curador.java`**: Interfaz que obliga a programar el método `curar()`.
-*   🛡️ **`Paladin.java`**: ¡La élite! Aplica la **herencia múltiple de interfaces** (`extends Atacante, Curador`). Además, utiliza la magia de Java 8 regalando un método **`default`** llamado `proteger()` que ya viene con código incluido.
-
-### 📦 3. `profesiones` (Las Clases Jugables)
-Todas estas clases hacen un `extends Personaje` (herencia) y un `implements` de alguna habilidad (interfaces):
-*   🪓 **`Guerrero.java`**: Implementa `Atacante`. Quita 20 puntos de vida por golpe fijo. *"¡Por la alianza!"*.
-*   🔥 **`Mago.java`**: Implementa `Atacante`. Su daño es dinámico: si su nivel supera el 5, quita 30 puntos de vida; si no, quita 10. *"¡Fuego y destrucción!"*.
-*   ✝️ **`Clerigo.java`**: Implementa la súper-interfaz `Paladin` (y por tanto, está obligado a atacar y curar). *"¡La luz me guía!"*.
-
-### 📦 4. `motor_rpg` (La Ejecución)
-*   🎮 **`JuegoRPG.java`**: Contiene nuestro `public static void main`. Aquí es donde la teoría cobra vida.
+Recordad el contexto: hemos sido contratados por un estudio indie para programar el núcleo lógico de un nuevo videojuego de rol (RPG). ¡Aquí tenéis el código que da vida a nuestros héroes!
 
 ---
 
-## 🎯 ¿En qué debes fijarte al leer el código?
+## 🎯 ¿Qué conceptos ponemos en práctica aquí?
 
-Al revisar los archivos, prestad especial atención a estos tres momentos clave:
+Este proyecto es la culminación de todo lo aprendido. Para construir el motor hemos tenido que aplicar:
 
-1. **El uso de `super(nombre, nivel)`**: Abrid las clases `Guerrero`, `Mago` o `Clerigo`. Veréis que su constructor es muy pequeño, porque delegan la tarea de inicializar los datos básicos (y asignar los 100 puntos de vida) al constructor de su padre `Personaje`.
-2. **El Polimorfismo en acción**: En `JuegoRPG.java`, fijaos en estas líneas:
-   ```java
-   // Guardamos objetos distintos (Guerrero, Mago, Clerigo) en un array de su clase Padre
-   Personaje
+*   👻 **Clases abstractas (`abstract`)**: La clase `Personaje` como base. No existen "personajes genéricos" vagando por el juego, por lo que evitamos su instanciación pero definimos su ADN.
+*   🛡️ **Encapsulación y visibilidad `protected`**: Los puntos de vida, el nombre y el nivel son heredados por las profesiones hijas, pero siguen ocultos al exterior para evitar trampas.
+*   🤝 **Interfaces como capacidades**: `Atacante` y `Curador` funcionan como contratos que definen estrictamente qué sabe hacer cada profesión.
+*   🧬 **Herencia múltiple de interfaces**: La interfaz `Paladin` une el ataque y la cura heredando de ambas.
+*   🆕 **Métodos `default`**: La habilidad pasiva de protegerse, propia de los paladines, implementada directamente en la interfaz.
+*   🎭 **Polimorfismo en estado puro**: Un array de tipo `Personaje` almacenando guerreros, magos y clérigos juntos para ejecutar métodos de forma dinámica.
+
+---
+
+## 🚀 Estructura del motor de juego
+
+El código está organizado en **4 paquetes** siguiendo el documento de diseño (GDD) para que el juego sea escalable:
+
+| Paquete | Archivos | Descripción |
+| :---: | :--- | :--- |
+| `entidades` | 🧍 **`Personaje.java`** | La clase **abstracta** base. Gestiona el daño (evitando que la vida baje de cero) y obliga a sus hijos a implementar un grito de batalla. |
+| `habilidades` | 🗡️ **`Atacante.java`**<br>🩹 **`Curador.java`**<br>🛡️ **`Paladin.java`** | Las **interfaces** del juego. Definen las acciones en combate. Ojo a la herencia múltiple en el paladín y su método por defecto. |
+| `profesiones` | 🪓 **`Guerrero.java`**<br>🔥 **`Mago.java`**<br>✝️ **`Clerigo.java`** | Las clases concretas jugables. Heredan de la clase personaje para tener vida y nivel, e implementan sus respectivas habilidades. |
+| `motor_rpg` | 🎮 **`JuegoRPG.java`** | La clase con el método principal. Instancia el **batallón**, ejecuta el bucle polimórfico de los gritos y la simulación manual del combate. |
+
+---
+
+## 🛠️ ¿Cómo usar este repositorio?
+
+1. **Explora la jerarquía:** Empieza leyendo `Personaje.java` (la base), luego ve a las interfaces en `habilidades` (los contratos) y, finalmente, abre las clases en `profesiones` para ver cómo unen ambas cosas.
+2. **Analiza los constructores:** Fíjate cómo el guerrero, el mago y el clérigo usan `super(nombre, nivel)` para delegar la inicialización de los datos (y los 100 puntos de vida) al constructor de su padre.
+3. **Ejecuta la simulación:** Ejecuta `JuegoRPG.java` y observa la salida por la consola de tu IDE. Presta especial atención al bucle `for (Personaje p : batallon)`. Entender cómo una misma variable `p` sabe qué grito dar según el objeto real que guarda es la clave de todo.
+
+> **💡 Consejo del profe:** 
+> *Este proyecto es vuestra prueba de fuego en programación orientada a objetos. Si sois capaces de entender por qué un clérigo puede guardarse en un array de tipo personaje, pero a la vez puede usar el método de protegerse de la interfaz paladín, ¡estáis listos para cualquier reto de diseño de software! Repasadlo bien.*
+
+---
+*Profe: Javier Torre Antúnez | IES Newton-Salas* 🏫
